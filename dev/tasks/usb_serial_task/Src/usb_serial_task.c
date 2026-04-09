@@ -20,6 +20,11 @@ void usb_serial_task(void *argument)
         send_buf[0] = 0x55;
         send_buf[1] = 0xAA;
         memcpy(&send_buf[2], INS_quat, sizeof(INS_quat));
+        //异或校验位
+        for(int i = 0 ; i < 60; i++)
+        {
+            send_buf[61] ^= send_buf[i];
+        }
         send_buf[62] = 0x0D;
         send_buf[63] = 0x0A;
         CDC_Transmit_FS(send_buf, sizeof(send_buf));
